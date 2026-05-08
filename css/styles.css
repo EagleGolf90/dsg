@@ -45,6 +45,23 @@ header h1 {
     font-style: italic;
 }
 
+.back-link {
+    color: white;
+    font-size: 1.1em;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 16px;
+    border: 2px solid white;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(-5px);
+}
+
 .accordion {
     padding: 20px;
 }
