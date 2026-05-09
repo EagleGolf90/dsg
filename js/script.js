@@ -374,4 +374,170 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Image Modal Functionality for Mobile Devices
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalDots = document.getElementById('modalDots');
+    const modalPrevBtn = document.querySelector('.modal-prev');
+    const modalNextBtn = document.querySelector('.modal-next');
+    const modalCloseBtn = document.querySelector('.modal-close');
+    
+    let currentModalImages = [];
+    let currentModalIndex = 0;
+
+    // Function to check if device is mobile
+    function isMobileDevice() {
+        return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Function to open modal with images
+    function openModal(images, startIndex = 0) {
+        currentModalImages = images;
+        currentModalIndex = startIndex;
+        
+        // Clear existing dots
+        modalDots.innerHTML = '';
+        
+        // Create dots for each image
+        currentModalImages.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.classList.add('modal-dot');
+            if (index === startIndex) dot.classList.add('active');
+            dot.addEventListener('click', () => goToModalSlide(index));
+            modalDots.appendChild(dot);
+        });
+        
+        // Show first image
+        showModalImage(startIndex);
+        
+        // Show modal
+        imageModal.style.display = 'flex';
+        setTimeout(() => {
+            imageModal.classList.add('active');
+        }, 10);
+        
+        // Prevent body scrolling
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Function to close modal
+    function closeModal() {
+        imageModal.classList.remove('active');
+        setTimeout(() => {
+            imageModal.style.display = 'none';
+        }, 300);
+        
+        // Restore body scrolling
+        document.body.style.overflow = '';
+    }
+
+    // Function to show specific image in modal
+    function showModalImage(index) {
+        const dots = modalDots.querySelectorAll('.modal-dot');
+        
+        // Remove active class from previous dot
+        if (dots[currentModalIndex]) {
+            dots[currentModalIndex].classList.remove('active');
+        }
+        
+        // Update index
+        currentModalIndex = index;
+        
+        // Set image source and alt
+        const imgData = currentModalImages[currentModalIndex];
+        modalImage.src = imgData.src;
+        modalImage.alt = imgData.alt;
+        
+        // Add active class to current dot
+        if (dots[currentModalIndex]) {
+            dots[currentModalIndex].classList.add('active');
+        }
+    }
+
+    // Function to navigate to specific modal slide
+    function goToModalSlide(index) {
+        showModalImage(index);
+    }
+
+    // Function to show next image in modal
+    function nextModalImage() {
+        const nextIndex = (currentModalIndex + 1) % currentModalImages.length;
+        showModalImage(nextIndex);
+    }
+
+    // Function to show previous image in modal
+    function prevModalImage() {
+        const prevIndex = (currentModalIndex - 1 + currentModalImages.length) % currentModalImages.length;
+        showModalImage(prevIndex);
+    }
+
+    // Event listeners for modal controls
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeModal);
+    }
+
+    if (modalPrevBtn) {
+        modalPrevBtn.addEventListener('click', prevModalImage);
+    }
+
+    if (modalNextBtn) {
+        modalNextBtn.addEventListener('click', nextModalImage);
+    }
+
+    // Close modal when clicking outside the image
+    if (imageModal) {
+        imageModal.addEventListener('click', (e) => {
+            if (e.target === imageModal) {
+                closeModal();
+            }
+        });
+    }
+
+    // Keyboard navigation for modal
+    document.addEventListener('keydown', (e) => {
+        if (imageModal.classList.contains('active')) {
+            if (e.key === 'Escape') {
+                closeModal();
+            } else if (e.key === 'ArrowLeft') {
+                prevModalImage();
+            } else if (e.key === 'ArrowRight') {
+                nextModalImage();
+            }
+        }
+    });
+
+    // Add click handlers to images on mobile devices
+    if (isMobileDevice()) {
+        sliderContainers.forEach((sliderContainer) => {
+            const images = sliderContainer.querySelectorAll('.slider-image');
+            
+            // Get all images in this slider
+            const imagesArray = Array.from(images).map(img => ({
+                src: img.src,
+                alt: img.alt
+            }));
+            
+            // Add click handler to each image
+            images.forEach((img, index) => {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openModal(imagesArray, index);
+                });
+            });
+        });
+    }
+
+    // Handle window resize - update mobile behavior if needed
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            // If modal is open and device is no longer mobile, close modal
+            if (!isMobileDevice() && imageModal.classList.contains('active')) {
+                closeModal();
+            }
+        }, 250);
+    });
 });

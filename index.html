@@ -34,7 +34,7 @@
                     <strong>Time:</strong> 10:00 am to 3:00 pm<br/>
                     <strong>Cost:</strong> $55.00 per person<br/>
                     <strong>Registration Deadline:</strong> November 9, 2026<br/>
-                    <a href="#registration" style="color: #007bff; text-decoration: underline;">Go to Register Now</a>
+                    <a href="#registration" class="registration_link">Go to Register Now</a>
                 </p>
                 <p>
                     <strong>⚠️ IMPORTANT:</strong> No walk-in or pay at the door will be accepted. 
@@ -175,6 +175,20 @@
             <p>&copy; 2026 Deaf Seniors of Georgia. All rights reserved. </p>
         </div>
     </div>
+
+    <!-- Image Modal for Mobile Devices -->
+    <div id="imageModal" class="image-modal">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <div class="modal-slider-container">
+                <button class="modal-slider-btn modal-prev" aria-label="Previous image">&lt;</button>
+                <img src="" alt="" class="modal-image" id="modalImage">
+                <button class="modal-slider-btn modal-next" aria-label="Next image">&gt;</button>
+            </div>
+            <div class="modal-slider-dots" id="modalDots"></div>
+        </div>
+    </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>

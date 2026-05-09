@@ -440,6 +440,11 @@ footer {
     line-height: 1.6;
 }
 
+.registration_link {
+    color: #007bff;
+    text-decoration: underline;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
