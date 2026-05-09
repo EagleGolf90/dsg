@@ -315,4 +315,63 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Hotel Slider Functionality
+    const sliderContainers = document.querySelectorAll('.slider-container');
+    sliderContainers.forEach((sliderContainer) => {
+        const images = sliderContainer.querySelectorAll('.slider-image');
+        const dotsContainer = sliderContainer.parentElement.querySelector('.slider-dots');
+        const prevBtn = sliderContainer.querySelector('.prev');
+        const nextBtn = sliderContainer.querySelector('.next');
+        let currentSlide = 0;
+
+        // Create dots
+        images.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.classList.add('slider-dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = dotsContainer.querySelectorAll('.slider-dot');
+
+        function goToSlide(slideIndex) {
+            // Remove active class from current slide and dot
+            images[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+
+            // Update current slide index
+            currentSlide = slideIndex;
+
+            // Add active class to new slide and dot
+            images[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            const nextIndex = (currentSlide + 1) % images.length;
+            goToSlide(nextIndex);
+        }
+
+        function prevSlide() {
+            const prevIndex = (currentSlide - 1 + images.length) % images.length;
+            goToSlide(prevIndex);
+        }
+
+        // Event listeners for buttons
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (sliderContainer.matches(':hover')) {
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            }
+        });
+    });
 });
