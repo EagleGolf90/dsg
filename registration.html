@@ -5,13 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Event Registration</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfHxBUtAAAAAHq4RLVZ4VyxWzDFdFN2Cs5m70Cm"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-      function onSubmit(token) {
-        document.getElementById("demo-form").submit();
+      // Define reCAPTCHA callback early so it's available when the API loads
+      function onRecaptchaChange() {
+        const recaptchaResponse = grecaptcha.getResponse();
+        const startBtn = document.getElementById("startRegistrationBtn");
+
+        if (startBtn) {
+          if (recaptchaResponse && recaptchaResponse.length > 0) {
+            // reCAPTCHA is checked, enable the button
+            startBtn.disabled = false;
+          } else {
+            // reCAPTCHA is not checked, disable the button
+            startBtn.disabled = true;
+          }
+        }
       }
     </script>
+
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
@@ -149,14 +161,31 @@
             <!-- <button type="submit" class="btn btn-primary">
               <span class="btn-text">Submit Registration</span>
             </button> -->
+            <!-- reCAPTCHA -->
+            <div class="d-flex justify-content-center mb-3">
+              <div
+                class="g-recaptcha"
+                data-sitekey="6LcO9vErAAAAACrXaBNfrSQmeR8A3sw62g1rzxr-"
+                data-callback="onRecaptchaChange"
+              ></div>
+            </div>
             <button
-              class="g-recaptcha"
-              data-sitekey="6LfHxBUtAAAAAHq4RLVZ4VyxWzDFdFN2Cs5m70Cm"
-              data-callback="onSubmit"
-              data-action="submit"
+              type="button"
+              id="startRegistrationBtn"
+              class="btn btn-primary btn-lg px-5 py-3"
+              onclick="verifyRecaptchaAndOpenModal()"
+              disabled
             >
-              Submit
+              <i class="fas fa-rocket me-2"></i>Submit Registration
             </button>
+            <div
+              id="recaptchaError"
+              class="text-danger mt-2"
+              style="display: none"
+            >
+              <i class="fas fa-exclamation-circle me-1"></i>Please complete the
+              reCAPTCHA verification
+            </div>
             <button type="reset" class="btn btn-secondary">
               <span class="btn-text">Clear Form</span>
             </button>
