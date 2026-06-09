@@ -1,5 +1,45 @@
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize EmailJS
+    // Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init('YOUR_PUBLIC_KEY'); // Get this from EmailJS dashboard
+    }
+
+    // Function to send registration email
+    function sendRegistrationEmail(formData) {
+        // Format additional attendees for email
+        let additionalAttendeesText = '';
+        if (formData.additionalAttendees && formData.additionalAttendees.length > 0) {
+            additionalAttendeesText = '\n\nAdditional Attendees:\n';
+            formData.additionalAttendees.forEach((attendee, index) => {
+                additionalAttendeesText += `${index + 2}. ${attendee.firstName} ${attendee.lastName}\n`;
+            });
+        }
+
+        const totalCost = (formData.banquetAttendees * 55.00).toFixed(2);
+        
+        // Email template parameters
+        const templateParams = {
+            to_email: 'eaglegolf90@gmail.com',
+            from_name: `${formData.primaryRegistrant.firstName} ${formData.primaryRegistrant.lastName}`,
+            registrant_name: `${formData.primaryRegistrant.firstName} ${formData.primaryRegistrant.lastName}`,
+            registrant_email: formData.primaryRegistrant.email,
+            registrant_phone: formData.primaryRegistrant.cellPhone,
+            total_attendees: formData.banquetAttendees,
+            additional_attendees: additionalAttendeesText || 'None',
+            total_cost: totalCost,
+            submission_date: new Date(formData.submittedAt).toLocaleString('en-US', {
+                dateStyle: 'full',
+                timeStyle: 'short'
+            })
+        };
+
+        // Send email using EmailJS
+        // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual IDs from EmailJS
+        return emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+    }
+
     // Get all accordion headers
     const accordionHeaders = document.querySelectorAll('.accordion-header');
 
@@ -202,6 +242,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate total cost dynamically
         const attendeesInput = document.getElementById('banquetAttendees');
         const totalCostDisplay = document.getElementById('totalCost');
+        const additionalNamesSection = document.getElementById('additionalNamesSection');
+        const additionalNamesContainer = document.getElementById('additionalNamesContainer');
         const pricePerPerson = 55.00;
 
         if (attendeesInput && totalCostDisplay) {
@@ -209,7 +251,116 @@ document.addEventListener('DOMContentLoaded', function() {
                 const attendees = parseInt(this.value) || 1;
                 const total = (attendees * pricePerPerson).toFixed(2);
                 totalCostDisplay.textContent = total;
+
+                // Show/hide additional names section and create fields
+                if (attendees >= 2 && additionalNamesSection && additionalNamesContainer) {
+                    additionalNamesSection.style.display = 'block';
+                    updateAdditionalNameFields(attendees);
+                } else if (additionalNamesSection) {
+                    additionalNamesSection.style.display = 'none';
+                    additionalNamesContainer.innerHTML = '';
+                }
             });
+        }
+
+        // Function to create additional name fields
+        function updateAdditionalNameFields(totalAttendees) {
+            const additionalCount = totalAttendees - 1; // Subtract 1 for the primary registrant
+            additionalNamesContainer.innerHTML = '';
+
+            for (let i = 1; i <= additionalCount; i++) {
+                const nameField = document.createElement('div');
+                nameField.className = 'form-row';
+                nameField.innerHTML = `
+                    <div class="form-group">
+                        <label for="additionalFirstName${i}">
+                            Attendee ${i + 1} First Name <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="additionalFirstName${i}"
+                            name="additionalFirstName${i}"
+                            required
+                            placeholder="First name"
+                            class="additional-name-field"
+                            data-attendee="${i}"
+                        />
+                        <span class="error-message" id="additionalFirstNameError${i}"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="additionalLastName${i}">
+                            Attendee ${i + 1} Last Name <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="additionalLastName${i}"
+                            name="additionalLastName${i}"
+                            required
+                            placeholder="Last name"
+                            class="additional-name-field"
+                            data-attendee="${i}"
+                        />
+                        <span class="error-message" id="additionalLastNameError${i}"></span>
+                    </div>
+                `;
+                additionalNamesContainer.appendChild(nameField);
+
+                // Add validation for the new fields
+                const firstNameInput = document.getElementById(`additionalFirstName${i}`);
+                const lastNameInput = document.getElementById(`additionalLastName${i}`);
+                const firstNameError = document.getElementById(`additionalFirstNameError${i}`);
+                const lastNameError = document.getElementById(`additionalLastNameError${i}`);
+
+                if (firstNameInput) {
+                    firstNameInput.addEventListener('blur', function() {
+                        const errorMsg = validateName(this.value, 'First name');
+                        if (firstNameError) {
+                            firstNameError.textContent = errorMsg;
+                        }
+                    });
+
+                    firstNameInput.addEventListener('input', function() {
+                        if (firstNameError && firstNameError.textContent) {
+                            const errorMsg = validateName(this.value, 'First name');
+                            if (!errorMsg) {
+                                firstNameError.textContent = '';
+                            }
+                        }
+                    });
+                }
+
+                if (lastNameInput) {
+                    lastNameInput.addEventListener('blur', function() {
+                        const errorMsg = validateName(this.value, 'Last name');
+                        if (lastNameError) {
+                            lastNameError.textContent = errorMsg;
+                        }
+                    });
+
+                    lastNameInput.addEventListener('input', function() {
+                        if (lastNameError && lastNameError.textContent) {
+                            const errorMsg = validateName(this.value, 'Last name');
+                            if (!errorMsg) {
+                                lastNameError.textContent = '';
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // Helper function to validate name fields
+        function validateName(value, fieldName) {
+            if (!value || value.trim().length === 0) {
+                return `${fieldName} is required`;
+            }
+            if (value.trim().length < 2) {
+                return `${fieldName} must be at least 2 characters`;
+            }
+            if (!/^[a-zA-Z\s\-']+$/.test(value)) {
+                return `${fieldName} can only contain letters, spaces, hyphens, and apostrophes`;
+            }
+            return '';
         }
 
         // Form submission
@@ -231,6 +382,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
+            // Validate additional name fields if they exist
+            const additionalNameInputs = document.querySelectorAll('.additional-name-field');
+            additionalNameInputs.forEach(input => {
+                const attendeeNum = input.dataset.attendee;
+                const isFirstName = input.id.includes('FirstName');
+                const fieldName = isFirstName ? 'First name' : 'Last name';
+                const errorId = input.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                
+                const errorMsg = validateName(input.value, fieldName);
+                if (errorElement) {
+                    errorElement.textContent = errorMsg;
+                }
+                if (errorMsg) {
+                    isValid = false;
+                }
+            });
+
             // Validate reCAPTCHA
             const recaptchaResponse = grecaptcha.getResponse();
             const recaptchaError = document.getElementById('recaptchaError');
@@ -248,43 +417,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // If validation passes, collect form data
             if (isValid) {
+                const banquetAttendees = parseInt(document.getElementById('banquetAttendees').value);
+                
+                // Collect additional attendee names
+                const additionalAttendees = [];
+                for (let i = 1; i < banquetAttendees; i++) {
+                    const firstNameInput = document.getElementById(`additionalFirstName${i}`);
+                    const lastNameInput = document.getElementById(`additionalLastName${i}`);
+                    
+                    if (firstNameInput && lastNameInput) {
+                        additionalAttendees.push({
+                            firstName: firstNameInput.value.trim(),
+                            lastName: lastNameInput.value.trim()
+                        });
+                    }
+                }
+
                 const formData = {
-                    firstName: document.getElementById('firstName').value.trim(),
-                    lastName: document.getElementById('lastName').value.trim(),
-                    email: document.getElementById('email').value.trim(),
-                    cellPhone: document.getElementById('cellPhone').value.trim(),
-                    banquetAttendees: parseInt(document.getElementById('banquetAttendees').value),
+                    primaryRegistrant: {
+                        firstName: document.getElementById('firstName').value.trim(),
+                        lastName: document.getElementById('lastName').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        cellPhone: document.getElementById('cellPhone').value.trim()
+                    },
+                    banquetAttendees: banquetAttendees,
+                    additionalAttendees: additionalAttendees,
                     recaptchaToken: recaptchaResponse,
                     submittedAt: new Date().toISOString()
                 };
 
                 console.log('Form Data:', formData);
 
-                // Show success message
-                registrationForm.style.display = 'none';
-                const successMessage = document.getElementById('successMessage');
-                if (successMessage) {
-                    successMessage.classList.remove('hidden');
-                }
+                // Disable submit button to prevent double submission
+                const submitButton = registrationForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.innerHTML;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="btn-text">Sending...</span>';
 
-                // Here you would typically send the data to your server
-                // Example:
-                // fetch('/api/register', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(formData)
-                // })
-                // .then(response => response.json())
-                // .then(data => {
-                //     console.log('Success:', data);
-                //     // Show success message
-                // })
-                // .catch((error) => {
-                //     console.error('Error:', error);
-                //     // Show error message
-                // });
+                // Send email using EmailJS
+                sendRegistrationEmail(formData)
+                    .then(() => {
+                        // Show success message
+                        registrationForm.style.display = 'none';
+                        const successMessage = document.getElementById('successMessage');
+                        if (successMessage) {
+                            successMessage.classList.remove('hidden');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error sending email:', error);
+                        alert('There was an error submitting your registration. Please try again or contact us directly at eaglegolf90@gmail.com');
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalButtonText;
+                    });
             } else {
                 // Scroll to first error
                 const firstError = document.querySelector('.error-message:not(:empty)');
@@ -303,6 +488,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     field.error.textContent = '';
                 }
             });
+            
+            // Clear additional names section
+            if (additionalNamesSection) {
+                additionalNamesSection.style.display = 'none';
+            }
+            if (additionalNamesContainer) {
+                additionalNamesContainer.innerHTML = '';
+            }
+            
+            // Reset total cost display
+            if (totalCostDisplay) {
+                totalCostDisplay.textContent = '55.00';
+            }
             
             // Reset reCAPTCHA
             if (typeof grecaptcha !== 'undefined') {
