@@ -1,43 +1,45 @@
+// Global function called by the Submit Registration button onclick
+function verifyRecaptchaAndOpenModal() {
+    const form = document.getElementById('registrationForm');
+    if (form) {
+        // Trigger the form's submit event so all validation runs
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+}
+
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize EmailJS
-    // Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init('YOUR_PUBLIC_KEY'); // Get this from EmailJS dashboard
-    }
 
-    // Function to send registration email
+    // Function to send registration email via PHPMailer (mail/send_mail.php)
     function sendRegistrationEmail(formData) {
-        // Format additional attendees for email
-        let additionalAttendeesText = '';
-        if (formData.additionalAttendees && formData.additionalAttendees.length > 0) {
-            additionalAttendeesText = '\n\nAdditional Attendees:\n';
-            formData.additionalAttendees.forEach((attendee, index) => {
-                additionalAttendeesText += `${index + 2}. ${attendee.firstName} ${attendee.lastName}\n`;
-            });
-        }
-
         const totalCost = (formData.banquetAttendees * 55.00).toFixed(2);
-        
-        // Email template parameters
-        const templateParams = {
-            to_email: 'eaglegolf90@gmail.com',
-            from_name: `${formData.primaryRegistrant.firstName} ${formData.primaryRegistrant.lastName}`,
-            registrant_name: `${formData.primaryRegistrant.firstName} ${formData.primaryRegistrant.lastName}`,
-            registrant_email: formData.primaryRegistrant.email,
-            registrant_phone: formData.primaryRegistrant.cellPhone,
-            total_attendees: formData.banquetAttendees,
-            additional_attendees: additionalAttendeesText || 'None',
-            total_cost: totalCost,
-            submission_date: new Date(formData.submittedAt).toLocaleString('en-US', {
-                dateStyle: 'full',
-                timeStyle: 'short'
-            })
+
+        const payload = {
+            firstName:           formData.primaryRegistrant.firstName,
+            lastName:            formData.primaryRegistrant.lastName,
+            email:               formData.primaryRegistrant.email,
+            cellPhone:           formData.primaryRegistrant.cellPhone,
+            totalAttendees:      formData.banquetAttendees,
+            totalCost:           totalCost,
+            additionalAttendees: formData.additionalAttendees,
+            submittedAt:         new Date(formData.submittedAt).toLocaleString('en-US', {
+                                     dateStyle: 'full',
+                                     timeStyle: 'short'
+                                 })
         };
 
-        // Send email using EmailJS
-        // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual IDs from EmailJS
-        return emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+        return fetch('mail/send_mail.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(function(response) {
+            return response.json().then(function(data) {
+                if (!data.success) {
+                    throw new Error(data.message || 'Server error');
+                }
+                return data;
+            });
+        });
     }
 
     // Get all accordion headers
@@ -449,12 +451,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Form Data:', formData);
 
                 // Disable submit button to prevent double submission
-                const submitButton = registrationForm.querySelector('button[type="submit"]');
-                const originalButtonText = submitButton.innerHTML;
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<span class="btn-text">Sending...</span>';
+                const submitButton = document.getElementById('startRegistrationBtn');
+                const originalButtonText = submitButton ? submitButton.innerHTML : '';
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<span class="btn-text">Sending...</span>';
+                }
 
-                // Send email using EmailJS
+                // Send email via PHPMailer (mail/send_mail.php)
                 sendRegistrationEmail(formData)
                     .then(() => {
                         // Show success message
@@ -467,8 +471,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     .catch((error) => {
                         console.error('Error sending email:', error);
                         alert('There was an error submitting your registration. Please try again or contact us directly at eaglegolf90@gmail.com');
-                        submitButton.disabled = false;
-                        submitButton.innerHTML = originalButtonText;
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = originalButtonText;
+                        }
                     });
             } else {
                 // Scroll to first error
