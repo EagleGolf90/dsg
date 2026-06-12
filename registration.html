@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Event Registration</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
+    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+    <!-- <script>
       // Define reCAPTCHA callback early so it's available when the API loads
       function onRecaptchaChange() {
         const recaptchaResponse = grecaptcha.getResponse();
@@ -22,12 +22,7 @@
           }
         }
       }
-    </script>
-
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
-    ></script>
+    </script> -->
   </head>
   <body>
     <div class="container">
@@ -39,7 +34,11 @@
       </header>
 
       <div class="form-container">
-        <form id="registrationForm" class="registration-form">
+        <form
+          id="registrationForm"
+          class="registration-form"
+          method="POST"
+        >
           <div class="form-section">
             <h2>Personal Information</h2>
 
@@ -146,46 +145,42 @@
           </div>
 
           <div class="form-section">
-            <h2>Verification</h2>
+            <!-- <h2>Verification</h2> -->
 
-            <div class="form-group recaptcha-container">
-              <div
-                class="g-recaptcha"
-                data-sitekey="6LfHxBUtAAAAAHq4RLVZ4VyxWzDFdFN2Cs5m70Cm"
-              ></div>
-              <span class="error-message" id="recaptchaError"></span>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <!-- <button type="submit" class="btn btn-primary">
-              <span class="btn-text">Submit Registration</span>
-            </button> -->
-            <!-- reCAPTCHA -->
-            <div class="d-flex justify-content-center mb-3">
+            <!-- <div class="form-group recaptcha-container">
               <div
                 class="g-recaptcha"
                 data-sitekey="6LcO9vErAAAAACrXaBNfrSQmeR8A3sw62g1rzxr-"
                 data-callback="onRecaptchaChange"
               ></div>
+              <div
+                id="recaptchaError"
+                class="text-danger mt-2"
+                style="display: none"
+              >
+                <i class="fas fa-exclamation-circle me-1"></i>Please complete
+                the reCAPTCHA verification
+              </div>
             </div>
-            <button
+          </div> -->
+
+          <div class="form-actions">
+            <!-- <button
               type="button"
               id="startRegistrationBtn"
-              class="btn btn-primary btn-lg px-5 py-3"
+              class="btn btn-primary"
               onclick="verifyRecaptchaAndOpenModal()"
               disabled
             >
               <i class="fas fa-rocket me-2"></i>Submit Registration
-            </button>
-            <div
-              id="recaptchaError"
-              class="text-danger mt-2"
-              style="display: none"
+            </button> -->
+            <button
+              class="btn btn-primary"
+              type="submit"
+              id="startRegistrationBtn"
             >
-              <i class="fas fa-exclamation-circle me-1"></i>Please complete the
-              reCAPTCHA verification
-            </div>
+              <span class="btn-text">Submit Registration</span>
+            </button>
             <button type="reset" class="btn btn-secondary">
               <span class="btn-text">Clear Form</span>
             </button>

@@ -400,21 +400,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Validate reCAPTCHA
-            const recaptchaResponse = grecaptcha.getResponse();
-            const recaptchaError = document.getElementById('recaptchaError');
-            
-            if (!recaptchaResponse || recaptchaResponse.length === 0) {
-                if (recaptchaError) {
-                    recaptchaError.textContent = 'Please complete the reCAPTCHA verification';
-                }
-                isValid = false;
-            } else {
-                if (recaptchaError) {
-                    recaptchaError.textContent = '';
-                }
-            }
-
             // If validation passes, collect form data
             if (isValid) {
                 const banquetAttendees = parseInt(document.getElementById('banquetAttendees').value);
@@ -442,34 +427,53 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     banquetAttendees: banquetAttendees,
                     additionalAttendees: additionalAttendees,
-                    recaptchaToken: recaptchaResponse,
                     submittedAt: new Date().toISOString()
                 };
 
-                console.log('Form Data:', formData);
-
+                // Print registration information to console
+                console.log('=== REGISTRATION SUBMITTED ===');
+                console.log('Primary Registrant:', formData.primaryRegistrant);
+                console.log('Number of Attendees:', formData.banquetAttendees);
+                console.log('Total Cost: $' + (formData.banquetAttendees * 55.00).toFixed(2));
+                if (formData.additionalAttendees.length > 0) {
+                    console.log('Additional Attendees:', formData.additionalAttendees);
+                }
+                console.log('Submission Time:', new Date(formData.submittedAt).toLocaleString());
+                console.log('Full Form Data:', formData);
+                
                 // Disable submit button to prevent double submission
                 const submitButton = registrationForm.querySelector('button[type="submit"]');
                 const originalButtonText = submitButton.innerHTML;
                 submitButton.disabled = true;
-                submitButton.innerHTML = '<span class="btn-text">Sending...</span>';
+                submitButton.innerHTML = '<span class="btn-text">Submitting...</span>';
 
-                // Send email using EmailJS
-                sendRegistrationEmail(formData)
-                    .then(() => {
+                // Submit form data to registration.php
+                fetch('registration.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
                         // Show success message
                         registrationForm.style.display = 'none';
                         const successMessage = document.getElementById('successMessage');
                         if (successMessage) {
                             successMessage.classList.remove('hidden');
                         }
-                    })
-                    .catch((error) => {
-                        console.error('Error sending email:', error);
-                        alert('There was an error submitting your registration. Please try again or contact us directly at eaglegolf90@gmail.com');
-                        submitButton.disabled = false;
-                        submitButton.innerHTML = originalButtonText;
-                    });
+                    } else {
+                        throw new Error(data.message || 'Registration failed');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error submitting registration:', error);
+                    alert('There was an error submitting your registration. Please try again or contact us directly at eaglegolf90@gmail.com');
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalButtonText;
+                });
             } else {
                 // Scroll to first error
                 const firstError = document.querySelector('.error-message:not(:empty)');
@@ -500,16 +504,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reset total cost display
             if (totalCostDisplay) {
                 totalCostDisplay.textContent = '55.00';
-            }
-            
-            // Reset reCAPTCHA
-            if (typeof grecaptcha !== 'undefined') {
-                grecaptcha.reset();
-            }
-            
-            const recaptchaError = document.getElementById('recaptchaError');
-            if (recaptchaError) {
-                recaptchaError.textContent = '';
             }
         });
     }
