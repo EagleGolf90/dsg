@@ -444,7 +444,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Full Form Data:', formData);
                 
                 // Disable submit button to prevent double submission
-<<<<<<< HEAD
                 const submitButton = registrationForm.querySelector('button[type="submit"]');
                 const originalButtonText = submitButton.innerHTML;
                 submitButton.disabled = true;
@@ -461,25 +460,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-=======
-                const submitButton = document.getElementById('startRegistrationBtn');
-                const originalButtonText = submitButton ? submitButton.innerHTML : '';
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.innerHTML = '<span class="btn-text">Sending...</span>';
-                }
-
-                // Send email via PHPMailer (mail/send_mail.php)
-                sendRegistrationEmail(formData)
-                    .then(() => {
->>>>>>> bff7dcb462bd0fb14ff7abbec4057e72d75b90b9
                         // Show success message
                         registrationForm.style.display = 'none';
                         const successMessage = document.getElementById('successMessage');
                         if (successMessage) {
                             successMessage.classList.remove('hidden');
                         }
-<<<<<<< HEAD
                     } else {
                         throw new Error(data.message || 'Registration failed');
                     }
@@ -490,17 +476,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitButton.disabled = false;
                     submitButton.innerHTML = originalButtonText;
                 });
-=======
-                    })
-                    .catch((error) => {
-                        console.error('Error sending email:', error);
-                        alert('There was an error submitting your registration. Please try again or contact us directly at eaglegolf90@gmail.com');
-                        if (submitButton) {
-                            submitButton.disabled = false;
-                            submitButton.innerHTML = originalButtonText;
-                        }
-                    });
->>>>>>> bff7dcb462bd0fb14ff7abbec4057e72d75b90b9
             } else {
                 // Scroll to first error
                 const firstError = document.querySelector('.error-message:not(:empty)');
