@@ -5,24 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Event Registration</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
-    <!-- <script>
-      // Define reCAPTCHA callback early so it's available when the API loads
-      function onRecaptchaChange() {
-        const recaptchaResponse = grecaptcha.getResponse();
-        const startBtn = document.getElementById("startRegistrationBtn");
-
-        if (startBtn) {
-          if (recaptchaResponse && recaptchaResponse.length > 0) {
-            // reCAPTCHA is checked, enable the button
-            startBtn.disabled = false;
-          } else {
-            // reCAPTCHA is not checked, disable the button
-            startBtn.disabled = true;
-          }
-        }
-      }
-    </script> -->
   </head>
   <body>
     <div class="container">
@@ -140,36 +122,7 @@
             <div id="additionalNamesContainer"></div>
           </div>
 
-          <!-- <div class="form-section">
-            <h2>Verification</h2>
-
-            <div class="form-group recaptcha-container">
-              <div
-                class="g-recaptcha"
-                data-sitekey="6LcO9vErAAAAACrXaBNfrSQmeR8A3sw62g1rzxr-"
-                data-callback="onRecaptchaChange"
-              ></div>
-              <div
-                id="recaptchaError"
-                class="text-danger mt-2"
-                style="display: none"
-              >
-                <i class="fas fa-exclamation-circle me-1"></i>Please complete
-                the reCAPTCHA verification
-              </div>
-            </div>
-          </div> -->
-
           <div class="form-actions">
-            <!-- <button
-              type="button"
-              id="startRegistrationBtn"
-              class="btn btn-primary"
-              onclick="verifyRecaptchaAndOpenModal()"
-              disabled
-            >
-              <i class="fas fa-rocket me-2"></i>Submit Registration
-            </button> -->
             <button
               class="btn btn-primary"
               type="submit"
