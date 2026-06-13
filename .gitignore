@@ -3,3 +3,4 @@ docs/*
 testing/*
 includes/config.php
 .env
+database_schema.sql
