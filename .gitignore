@@ -1,4 +1,5 @@
 docs/*
 *.md
 testing/*
-includes/*
+includes/config.php
+.env
