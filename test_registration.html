@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Registration Submission</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+      }
+      h1 {
+        color: #2d3748;
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+      .subtitle {
+        color: #718096;
+        margin-bottom: 30px;
+      }
+      .btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        transition: background 0.3s;
+      }
+      .btn:hover {
+        background: #5568d3;
+      }
+      .btn:disabled {
+        background: #cbd5e0;
+        cursor: not-allowed;
+      }
+      .btn-secondary {
+        background: #48bb78;
+      }
+      .btn-secondary:hover {
+        background: #38a169;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 5px;
+        display: none;
+      }
+      .result.success {
+        background: #f0fff4;
+        border: 2px solid #48bb78;
+        color: #22543d;
+        display: block;
+      }
+      .result.error {
+        background: #fff5f5;
+        border: 2px solid #f56565;
+        color: #742a2a;
+        display: block;
+      }
+      .result h3 {
+        margin-bottom: 10px;
+      }
+      .result pre {
+        background: #2d3748;
+        color: #68d391;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-size: 12px;
+        margin-top: 10px;
+      }
+      .info-box {
+        background: #ebf8ff;
+        border-left: 4px solid #3182ce;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .test-data {
+        background: #f7fafc;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+        font-size: 14px;
+      }
+      .test-data h3 {
+        margin-bottom: 10px;
+        color: #2d3748;
+      }
+      .test-data p {
+        margin: 5px 0;
+        color: #4a5568;
+      }
+      .links {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #e2e8f0;
+      }
+      .links a {
+        color: #667eea;
+        text-decoration: none;
+        margin-right: 15px;
+      }
+      .links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🧪 Test Registration System</h1>
+      <p class="subtitle">
+        Use this page to verify your registration system is working correctly
+      </p>
+
+      <div class="info-box">
+        <strong>📌 What this test does:</strong>
+        <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.6">
+          <li>Submits a test registration with sample data</li>
+          <li>Checks if the database can store the registration</li>
+          <li>Verifies email notification is sent</li>
+          <li>Shows detailed response from the server</li>
+        </ul>
+      </div>
+
+      <div class="test-data">
+        <h3>Test Data Being Submitted:</h3>
+        <p><strong>Name:</strong> Test User</p>
+        <p><strong>Email:</strong> test@example.com</p>
+        <p><strong>Phone:</strong> (555) 123-4567</p>
+        <p><strong>Attendees:</strong> 2 people</p>
+        <p><strong>Total Cost:</strong> $110.00</p>
+        <p><strong>Additional Attendee:</strong> Jane Doe</p>
+      </div>
+
+      <button id="testBtn" class="btn" onclick="runTest()">
+        🚀 Run Test Registration
+      </button>
+
+      <button
+        class="btn btn-secondary"
+        onclick="window.location.href = 'check_system.php'"
+      >
+        🔧 Check System Status
+      </button>
+
+      <div id="result" class="result"></div>
+
+      <div class="links">
+        <a href="registration.html">← Back to Registration Form</a>
+        <a href="testing/debug_registration.php">Detailed Diagnostics</a>
+        <a href="testing/registration_errors.log" target="_blank"
+          >View Error Log</a
+        >
+      </div>
+    </div>
+
+    <script>
+      function runTest() {
+        const btn = document.getElementById("testBtn");
+        const resultDiv = document.getElementById("result");
+
+        // Disable button and show loading
+        btn.disabled = true;
+        btn.innerHTML = 'Testing... <span class="loading"></span>';
+
+        // Clear previous results
+        resultDiv.className = "result";
+        resultDiv.innerHTML = "";
+
+        // Prepare test data
+        const testData = {
+          primaryRegistrant: {
+            firstName: "Test",
+            lastName: "User",
+            email: "test@example.com",
+            cellPhone: "(555) 123-4567",
+          },
+          banquetAttendees: 2,
+          additionalAttendees: [
+            {
+              firstName: "Jane",
+              lastName: "Doe",
+            },
+          ],
+          submittedAt: new Date().toISOString(),
+        };
+
+        // Submit to registration.php
+        fetch("registration.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(testData),
+        })
+          .then((response) => {
+            // Check if response is JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+              return response.text().then((text) => {
+                throw new Error(
+                  "Server returned non-JSON response: " +
+                    text.substring(0, 200),
+                );
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.success) {
+              resultDiv.className = "result success";
+              resultDiv.innerHTML = `
+                        <h3>✅ Test Registration Successful!</h3>
+                        <p>The registration system is working correctly.</p>
+                        <p><strong>Registration ID:</strong> #${data.registrationId || "N/A"}</p>
+                        <p><strong>Message:</strong> ${data.message || "Registration completed"}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                        <p style="margin-top: 15px;"><strong>Note:</strong> This was a test registration. You can delete it from your database if needed.</p>
+                    `;
+            } else {
+              throw new Error(data.message || "Registration failed");
+            }
+          })
+          .catch((error) => {
+            resultDiv.className = "result error";
+            resultDiv.innerHTML = `
+                    <h3>❌ Test Failed</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <h4 style="margin-top: 15px;">What to do next:</h4>
+                    <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>Check the <a href="check_system.php" style="color: #3182ce;">System Status</a> page for configuration issues</li>
+                        <li>Review the <a href="testing/registration_errors.log" target="_blank" style="color: #3182ce;">Error Log</a> for detailed error messages</li>
+                        <li>Verify database tables exist by running <code>database_setup.sql</code></li>
+                        <li>Check browser console (F12) for additional errors</li>
+                    </ol>
+                    <pre>${error.stack || error.toString()}</pre>
+                `;
+          })
+          .finally(() => {
+            // Re-enable button
+            btn.disabled = false;
+            btn.innerHTML = "🚀 Run Test Registration";
+          });
+      }
+    </script>
+  </body>
+</html>
