@@ -2,5 +2,6 @@ docs/*
 *.md
 testing/*
 includes/config.php
+includes/env.php
 .env
 database_setup.sql
