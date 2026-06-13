@@ -214,8 +214,9 @@ try {
 
     // Sender & recipient
     $mail->setFrom('admin@fulltimberstack.dev', 'DSG Registration System');
-    $mail->addAddress('eaglegolf90@gmail.com');
-    $mail->addReplyTo($email, "$firstName $lastName");
+    $mail->addAddress('kdgaweb@outlook.com');
+    $mail->addAddress($email, "$firstName $lastName");
+    // $mail->addReplyTo($email, "$firstName $lastName");
 
     // Email content
     $mail->isHTML(true);
@@ -237,6 +238,8 @@ try {
 
     // Format submitted date
     $submittedDate = date('F j, Y, g:i a', strtotime($submittedAt));
+
+    $CashApp = '$Swooshdeaf';
 
     $mail->Body = "
             <html>
@@ -287,9 +290,9 @@ try {
                         <em>
                         To one of the payment methods you choose, make sure to put Payable to: <b>DSG</b>
                         For check, mail to:<br/>Kelly Brady<br/>P.O. Box 3618<br/>Lilburn, GA 30048<br/><br/>Payable to: <b>DSG</b><br/><br/>
-                        For CashApp, UserName: $Swooshdeaf<br/><br/>
-                        For Zelle, use email: dsgtreasurer1@gmail.com<br/><br/>
-                        For Zeffy's, use email: dsgtreasurer1@gmail.com<br/><br/>
+                        For CashApp, UserName: $CashApp<br/>
+                        For Zelle, use email: dsgtreasurer1@gmail.com<br/>
+                        For Zeffy's, use email: dsgtreasurer1@gmail.com<br/>
                         </em>
                     </p>
                 </div>
