@@ -214,9 +214,9 @@ try {
 
     // Sender & recipient
     $mail->setFrom('admin@fulltimberstack.dev', 'DSG Registration System');
-    $mail->addAddress('ssadsc@msn.com');
+    // $mail->addAddress('ssadsc@msn.com');
+    $mail->addAddress('cjs1204@gmail.com');
     $mail->addAddress($email, "$firstName $lastName");
-    // $mail->addReplyTo($email, "$firstName $lastName");
 
     // Email content
     $mail->isHTML(true);
