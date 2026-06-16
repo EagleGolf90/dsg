@@ -220,7 +220,7 @@ try {
 
     // Email content
     $mail->isHTML(true);
-    $mail->Subject = "New Registration: Christmas Luncheon - $firstName $lastName";
+    $mail->Subject = "DSG Registration: Christmas Luncheon - $firstName $lastName";
 
     // Build additional attendees list for email
     $additionalAttendeesHtml = '';
@@ -257,7 +257,7 @@ try {
             </head>
             <body>
                 <div class='header'>
-                    <h1>New Christmas Luncheon Registration</h1>
+                    <h1>DSG Christmas Luncheon Registration</h1>
                 </div>
                 <div class='content'>
                     <div class='info-box'>
