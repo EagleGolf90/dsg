@@ -15,7 +15,7 @@ $conn = new mysqli($db_host, $db_username, $db_password, $db_name);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
 echo "<h2>Admin User Setup</h2>";
@@ -35,9 +35,9 @@ $create_table_sql = "CREATE TABLE IF NOT EXISTS admin_users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
 if ($conn->query($create_table_sql) === TRUE) {
-    echo "<p>✓ Table 'admin_users' created successfully or already exists.</p>";
+  echo "<p>✓ Table 'admin_users' created successfully or already exists.</p>";
 } else {
-    echo "<p>✗ Error creating table: " . $conn->error . "</p>";
+  echo "<p>✗ Error creating table: " . $conn->error . "</p>";
 }
 
 // Step 2: Create default admin user
@@ -57,24 +57,24 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    echo "<p>⚠ Admin user already exists. Skipping user creation.</p>";
+  echo "<p>⚠ Admin user already exists. Skipping user creation.</p>";
 } else {
-    // Insert admin user
-    $insert_sql = "INSERT INTO admin_users (username, password_hash, email, full_name) VALUES (?, ?, ?, ?)";
-    $stmt = $conn->prepare($insert_sql);
-    $stmt->bind_param("ssss", $default_username, $password_hash, $default_email, $default_fullname);
-    
-    if ($stmt->execute()) {
-        echo "<p>✓ Default admin user created successfully!</p>";
-        echo "<div style='background: #fff3cd; padding: 15px; border: 1px solid #ffc107; margin: 20px 0;'>";
-        echo "<strong>Default Login Credentials:</strong><br>";
-        echo "Username: <strong>admin</strong><br>";
-        echo "Password: <strong>Admin@123</strong><br><br>";
-        echo "<strong style='color: red;'>⚠ IMPORTANT: Change this password immediately after first login!</strong>";
-        echo "</div>";
-    } else {
-        echo "<p>✗ Error creating admin user: " . $conn->error . "</p>";
-    }
+  // Insert admin user
+  $insert_sql = "INSERT INTO admin_users (username, password_hash, email, full_name) VALUES (?, ?, ?, ?)";
+  $stmt = $conn->prepare($insert_sql);
+  $stmt->bind_param("ssss", $default_username, $password_hash, $default_email, $default_fullname);
+
+  if ($stmt->execute()) {
+    echo "<p>✓ Default admin user created successfully!</p>";
+    echo "<div style='background: #fff3cd; padding: 15px; border: 1px solid #ffc107; margin: 20px 0;'>";
+    echo "<strong>Default Login Credentials:</strong><br>";
+    echo "Username: <strong>admin</strong><br>";
+    echo "Password: <strong>Admin@123</strong><br><br>";
+    echo "<strong style='color: red;'>⚠ IMPORTANT: Change this password immediately after first login!</strong>";
+    echo "</div>";
+  } else {
+    echo "<p>✗ Error creating admin user: " . $conn->error . "</p>";
+  }
 }
 
 $stmt->close();
@@ -93,26 +93,31 @@ echo "</ol>";
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Setup Complete</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        h2 {
-            color: #333;
-        }
-        p {
-            line-height: 1.6;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Setup Complete</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+  </style>
 </head>
+
 <body>
 </body>
+
 </html>
