@@ -57,6 +57,18 @@ if (isset($_GET['error'])) {
       $message = 'Invalid user ID!';
       $messageType = 'error';
       break;
+    case 'cannot_edit_admin':
+      $message = 'The admin account cannot be edited!';
+      $messageType = 'error';
+      break;
+    case 'cannot_delete_admin':
+      $message = 'The admin account cannot be deleted!';
+      $messageType = 'error';
+      break;
+    case 'cannot_modify_admin':
+      $message = 'The admin account status cannot be changed!';
+      $messageType = 'error';
+      break;
     default:
       $message = 'An error occurred. Please try again.';
       $messageType = 'error';
@@ -466,26 +478,30 @@ $conn->close();
                 <td><?php echo $user['last_login'] ? date('M d, Y H:i', strtotime($user['last_login'])) : 'Never'; ?></td>
                 <td>
                   <div class="action-buttons">
-                    <button onclick="openEditModal(<?php echo htmlspecialchars(json_encode($user)); ?>)"
-                      class="btn btn-warning btn-small">
-                      ✏️ Edit
-                    </button>
-                    <?php if ($user['username'] !== $_SESSION['admin_username']): ?>
-                      <form method="POST" action="process_user.php" style="display: inline;"
-                        onsubmit="return confirm('Are you sure you want to toggle this user\'s status?');">
-                        <input type="hidden" name="action" value="toggle_status">
-                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                        <input type="hidden" name="current_status" value="<?php echo $user['is_active']; ?>">
-                        <button type="submit" class="btn btn-success btn-small">
-                          <?php echo $user['is_active'] ? '🔒 Deactivate' : '✅ Activate'; ?>
-                        </button>
-                      </form>
-                      <form method="POST" action="process_user.php" style="display: inline;"
-                        onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone!');">
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                        <button type="submit" class="btn btn-danger btn-small">🗑️ Delete</button>
-                      </form>
+                    <?php if ($user['username'] === 'admin'): ?>
+                      <span style="color: #999; font-size: 12px; font-style: italic;">🔒 Protected Account</span>
+                    <?php else: ?>
+                      <button onclick="openEditModal(<?php echo htmlspecialchars(json_encode($user)); ?>)"
+                        class="btn btn-warning btn-small">
+                        ✏️ Edit
+                      </button>
+                      <?php if ($user['username'] !== $_SESSION['admin_username']): ?>
+                        <form method="POST" action="process_user.php" style="display: inline;"
+                          onsubmit="return confirm('Are you sure you want to toggle this user\'s status?');">
+                          <input type="hidden" name="action" value="toggle_status">
+                          <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                          <input type="hidden" name="current_status" value="<?php echo $user['is_active']; ?>">
+                          <button type="submit" class="btn btn-success btn-small">
+                            <?php echo $user['is_active'] ? '🔒 Deactivate' : '✅ Activate'; ?>
+                          </button>
+                        </form>
+                        <form method="POST" action="process_user.php" style="display: inline;"
+                          onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone!');">
+                          <input type="hidden" name="action" value="delete">
+                          <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                          <button type="submit" class="btn btn-danger btn-small">🗑️ Delete</button>
+                        </form>
+                      <?php endif; ?>
                     <?php endif; ?>
                   </div>
                 </td>

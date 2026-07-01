@@ -168,6 +168,22 @@ function editUser($conn)
     exit();
   }
 
+  // Prevent editing the admin account
+  $stmt = $conn->prepare("SELECT username FROM admin_users WHERE id = ?");
+  $stmt->bind_param("i", $user_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+    $check_user = $result->fetch_assoc();
+    if ($check_user['username'] === 'admin') {
+      $stmt->close();
+      header("Location: manage_users.php?error=cannot_edit_admin");
+      exit();
+    }
+  }
+  $stmt->close();
+
   // Validate username format
   if (!preg_match('/^[a-zA-Z0-9_]{3,50}$/', $username)) {
     header("Location: manage_users.php?error=invalid_username");
@@ -277,6 +293,22 @@ function deleteUser($conn)
     exit();
   }
 
+  // Prevent deleting the admin account
+  $stmt = $conn->prepare("SELECT username FROM admin_users WHERE id = ?");
+  $stmt->bind_param("i", $user_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+    $check_user = $result->fetch_assoc();
+    if ($check_user['username'] === 'admin') {
+      $stmt->close();
+      header("Location: manage_users.php?error=cannot_delete_admin");
+      exit();
+    }
+  }
+  $stmt->close();
+
   // Delete user
   $stmt = $conn->prepare("DELETE FROM admin_users WHERE id = ?");
   $stmt->bind_param("i", $user_id);
@@ -317,6 +349,22 @@ function toggleStatus($conn)
     header("Location: manage_users.php?error=cannot_deactivate_self");
     exit();
   }
+
+  // Prevent toggling the admin account status
+  $stmt = $conn->prepare("SELECT username FROM admin_users WHERE id = ?");
+  $stmt->bind_param("i", $user_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+    $check_user = $result->fetch_assoc();
+    if ($check_user['username'] === 'admin') {
+      $stmt->close();
+      header("Location: manage_users.php?error=cannot_modify_admin");
+      exit();
+    }
+  }
+  $stmt->close();
 
   // Toggle status
   $new_status = $current_status ? 0 : 1;
