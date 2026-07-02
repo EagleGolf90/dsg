@@ -57,14 +57,14 @@ IF NOT EXISTS admin_users
 -- - Change the full name to your name
 
 INSERT INTO admin_users
-  (username, password_hash, email, full_name, is_active)
+    (username, password_hash, email, full_name, is_active)
 VALUES
-  (
-    'admin',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- This is hash for 'password'
-    'admin@example.com',
-    'System Administrator',
-    1
+    (
+        'dsgAdmin',
+        '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- This is hash for 'password'
+        'eaglegolf90@gmail.com',
+        'System Administrator',
+        1
 )
 ON DUPLICATE KEY
 UPDATE username=username;
