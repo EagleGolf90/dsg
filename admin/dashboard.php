@@ -317,6 +317,12 @@ $conn->close();
         <p>Add or edit admin accounts</p>
       </a>
 
+      <a href="id_list.php" class="action-card">
+        <div class="icon">🔢</div>
+        <h3>Attendee ID List</h3>
+        <p>View sequential IDs for all registrants and friends</p>
+      </a>
+
       <a href="../index.html" class="action-card">
         <div class="icon">🏠</div>
         <h3>View Website</h3>
