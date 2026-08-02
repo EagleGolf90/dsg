@@ -293,7 +293,7 @@ try {
                         For check, mail to:<br/>Kelly Brady<br/>P.O. Box 3618<br/>Lilburn, GA 30048<br/><br/>Payable to: <b>DSG</b><br/><br/>
                         For CashApp, UserName: $CashApp<br/>
                         For Zelle, use email: dsgtreasurer1@gmail.com<br/>
-                        For Zeffy's, use email: dsgtreasurer1@gmail.com<br/>
+                        For Zeffy's, use email: deafseniorsofgeorgia.org<br/>
                         </em>
                     </p>
                 </div>
