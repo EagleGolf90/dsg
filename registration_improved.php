@@ -181,7 +181,7 @@ try {
 
     // Sender & recipient
     $mail->setFrom('admin@fulltimberstack.dev', 'DSG Registration System');
-    $mail->addAddress('eaglegolf90@gmail.com');
+    // $mail->addAddress('eaglegolf90@gmail.com');
     $mail->addReplyTo($email, "$firstName $lastName");
 
     // Email content

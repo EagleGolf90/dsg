@@ -28,14 +28,14 @@ if (!$input) {
 }
 
 // Sanitize inputs
-$firstName      = htmlspecialchars(trim($input['firstName'] ?? ''));
-$lastName       = htmlspecialchars(trim($input['lastName'] ?? ''));
-$email          = filter_var(trim($input['email'] ?? ''), FILTER_SANITIZE_EMAIL);
-$cellPhone      = htmlspecialchars(trim($input['cellPhone'] ?? ''));
+$firstName = htmlspecialchars(trim($input['firstName'] ?? ''));
+$lastName = htmlspecialchars(trim($input['lastName'] ?? ''));
+$email = filter_var(trim($input['email'] ?? ''), FILTER_SANITIZE_EMAIL);
+$cellPhone = htmlspecialchars(trim($input['cellPhone'] ?? ''));
 $totalAttendees = intval($input['totalAttendees'] ?? 1);
-$totalCost      = number_format(floatval($input['totalCost'] ?? 0), 2);
+$totalCost = number_format(floatval($input['totalCost'] ?? 0), 2);
 $additionalAttendees = $input['additionalAttendees'] ?? [];
-$submittedAt    = htmlspecialchars(trim($input['submittedAt'] ?? ''));
+$submittedAt = htmlspecialchars(trim($input['submittedAt'] ?? ''));
 
 if (empty($firstName) || empty($lastName) || empty($email)) {
     http_response_code(400);
@@ -50,8 +50,8 @@ if (!empty($additionalAttendees)) {
     $additionalHtml .= '<ul>';
     foreach ($additionalAttendees as $index => $attendee) {
         $aFirst = htmlspecialchars(trim($attendee['firstName'] ?? ''));
-        $aLast  = htmlspecialchars(trim($attendee['lastName'] ?? ''));
-        $num    = $index + 2;
+        $aLast = htmlspecialchars(trim($attendee['lastName'] ?? ''));
+        $num = $index + 2;
         $additionalHtml .= "<li>Attendee {$num}: {$aFirst} {$aLast}</li>";
         $additionalText .= "Attendee {$num}: {$aFirst} {$aLast}\n";
     }
@@ -97,21 +97,21 @@ $mail = new PHPMailer(true);
 
 try {
     $mail->isSMTP();
-    $mail->Host       = 'mail.fulltimberstack.dev';
-    $mail->SMTPAuth   = true;
-    $mail->Username   = 'admin@fulltimberstack.dev';
-    $mail->Password   = '!mNmhbPk9hKBKAEB';
-    $mail->Port       = 587;
+    $mail->Host = 'mail.fulltimberstack.dev';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'admin@fulltimberstack.dev';
+    $mail->Password = '!mNmhbPk9hKBKAEB';
+    $mail->Port = 587;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
     $mail->setFrom('admin@fulltimberstack.dev', 'DSG Registration');
-    $mail->addAddress('eaglegolf90@gmail.com', 'DSG Admin');
+    // $mail->addAddress('eaglegolf90@gmail.com', 'DSG Admin');
     // Send confirmation copy to registrant
     // $mail->addCC($email, "{$firstName} {$lastName}");
 
     $mail->isHTML(true);
     $mail->Subject = "DSG Luncheon Registration - {$firstName} {$lastName}";
-    $mail->Body    = $htmlBody;
+    $mail->Body = $htmlBody;
     $mail->AltBody = $textBody;
 
     $mail->send();

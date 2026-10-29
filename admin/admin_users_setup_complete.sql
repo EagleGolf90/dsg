@@ -8,22 +8,15 @@ CREATE TABLE
 IF NOT EXISTS admin_users
 (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR
-(50) UNIQUE NOT NULL,
-    password_hash VARCHAR
-(255) NOT NULL,
-    email VARCHAR
-(100) NOT NULL,
-    full_name VARCHAR
-(100) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP NULL,
-    is_active TINYINT
-(1) DEFAULT 1,
-    INDEX idx_username
-(username),
-    INDEX idx_email
-(email)
+    is_active TINYINT(1) DEFAULT 1,
+    INDEX idx_username (username),
+    INDEX idx_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
