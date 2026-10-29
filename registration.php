@@ -195,6 +195,36 @@ try {
     }
   }
 
+  $notificationEmails = [
+    'ssadsc@msn.com' => 'ssadsc@msn.com',
+    'cjs1204@gmail.com' => 'cjs1204@gmail.com',
+    'dsgtreasurer1@gmail.com' => 'dsgtreasurer1@gmail.com'
+  ];
+  $adminQueryError = '';
+  try {
+    $adminResult = $conn->query("SELECT email FROM admin_users WHERE is_active = 1");
+  } catch (\mysqli_sql_exception $e) {
+    $adminResult = false;
+    $adminQueryError = $e->getMessage();
+  }
+
+  if ($adminResult === false) {
+    logRegistrationError('Failed to load active admin notification recipients', [
+      'error' => $adminQueryError ?: $conn->error
+    ]);
+  } else {
+    while ($admin = $adminResult->fetch_assoc()) {
+      $adminEmail = trim($admin['email']);
+      if (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL)) {
+        logRegistrationError('Skipping invalid active admin notification email');
+        continue;
+      }
+
+      $notificationEmails[strtolower($adminEmail)] = $adminEmail;
+    }
+    $adminResult->free();
+  }
+
   // Close database connection
   $conn->close();
 
@@ -214,9 +244,9 @@ try {
 
     // Sender & recipient
     $mail->setFrom('admin@fulltimberstack.dev', 'DSG Registration System');
-    $mail->addAddress('ssadsc@msn.com');
-    $mail->addAddress('cjs1204@gmail.com');
-    $mail->addAddress('dsgtreasurer1@gmail.com');
+    foreach ($notificationEmails as $adminEmail) {
+      $mail->addAddress($adminEmail);
+    }
     $mail->addAddress($email, "$firstName $lastName");
 
     // Email content
