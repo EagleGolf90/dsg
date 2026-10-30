@@ -105,7 +105,6 @@ try {
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
     $mail->setFrom('admin@fulltimberstack.dev', 'DSG Registration');
-    // $mail->addAddress('eaglegolf90@gmail.com', 'DSG Admin');
     // Send confirmation copy to registrant
     // $mail->addCC($email, "{$firstName} {$lastName}");
 

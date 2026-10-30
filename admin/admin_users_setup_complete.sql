@@ -55,7 +55,7 @@ VALUES
     (
         'dsgAdmin',
         '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- This is hash for 'password'
-        'eaglegolf90@gmail.com',
+        'admin@example.com', -- CHANGE THIS to your admin email
         'System Administrator',
         1
 )

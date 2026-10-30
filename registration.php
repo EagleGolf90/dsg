@@ -220,6 +220,11 @@ try {
         continue;
       }
 
+      // Excluded from registration notifications
+      if (strcasecmp($adminEmail, 'eaglegolf90@gmail.com') === 0) {
+        continue;
+      }
+
       $notificationEmails[strtolower($adminEmail)] = $adminEmail;
     }
     $adminResult->free();
