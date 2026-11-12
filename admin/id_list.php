@@ -5,42 +5,26 @@
 
 require_once 'check_auth.php';
 require_once '../includes/config.php';
+require_once 'attendee_ids.php';
 
 $conn = new mysqli($db_host, $db_username, $db_password, $db_name);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all people (primary registrants + friends) ordered by registration date,
-// primary registrant first within each group.
-$sql = "
-  SELECT reg_id, first_name, last_name, submitted_at, sort_order
-  FROM (
-    SELECT r.id AS reg_id, r.first_name, r.last_name, r.submitted_at, 0 AS sort_order
-    FROM registrations r
-    UNION ALL
-    SELECT ro.registration_id AS reg_id, ro.first_name, ro.last_name, r.submitted_at, ro.id AS sort_order
-    FROM registrations_others ro
-    JOIN registrations r ON ro.registration_id = r.id
-  ) combined
-  ORDER BY submitted_at ASC, reg_id ASC, sort_order ASC
-";
-
-$result = $conn->query($sql);
+$result = fetch_attendee_ids($conn);
 
 $people = [];
 $seq_id = 1;
-if ($result) {
-  while ($row = $result->fetch_assoc()) {
-    $people[] = [
-      'seq_id'       => $seq_id++,
-      'reg_id'       => $row['reg_id'],
-      'first_name'   => $row['first_name'],
-      'last_name'    => $row['last_name'],
-      'submitted_at' => $row['submitted_at'],
-      'is_primary'   => ($row['sort_order'] == 0),
-    ];
-  }
+while ($row = $result->fetch_assoc()) {
+  $people[] = [
+    'seq_id'       => $seq_id++,
+    'reg_id'       => $row['reg_id'],
+    'first_name'   => $row['first_name'],
+    'last_name'    => $row['last_name'],
+    'submitted_at' => $row['submitted_at'],
+    'is_primary'   => ($row['sort_order'] == 0),
+  ];
 }
 
 $conn->close();
@@ -124,6 +108,16 @@ $conn->close();
 
     .btn-print:hover {
       background: #f0f0f0;
+    }
+
+    .btn-winner {
+      background: #667eea;
+      color: white;
+      font-weight: 600;
+    }
+
+    .btn-winner:hover {
+      background: #5368d4;
     }
 
     .container {
@@ -280,6 +274,9 @@ $conn->close();
       <div>
         <h2>Attendee ID List</h2>
         <p>Sequential IDs assigned to each registrant and their friends, in registration order</p>
+      </div>
+      <div class="actions">
+        <a href="winner.php" class="btn btn-winner">Pick a Winner</a>
       </div>
     </div>
 
