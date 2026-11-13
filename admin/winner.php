@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
     .range, .note { color: #555; }
     .number {
       color: #4338a5;
-      font-size: clamp(6rem, 24vw, 18rem);
+      font-size: clamp(1.5rem, 6vw, 3rem);
       font-weight: 800;
       line-height: 1.1;
       overflow-wrap: anywhere;
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
     }
     .winner-name {
       color: #333;
-      font-size: clamp(1.5rem, 6vw, 3rem);
+      font-size: clamp(6rem, 24vw, 18rem);
       font-weight: 700;
       overflow-wrap: anywhere;
       margin: 0 0 30px;
