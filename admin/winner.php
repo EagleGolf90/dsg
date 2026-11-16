@@ -50,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
       color: #333;
     }
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+      color: #234b27;
       padding: 20px 40px;
       display: flex;
       justify-content: space-between;
@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
     }
     .header h1 { margin: 0; font-size: 24px; }
     .back {
-      color: white;
-      border: 1px solid white;
+      color: #234b27;
+      border: 1px solid #234b27;
       border-radius: 5px;
       padding: 10px 20px;
       text-decoration: none;
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
     h2 { margin: 0 0 10px; }
     .range, .note { color: #555; }
     .number {
-      color: #4338a5;
+      color: #558b2f;
       font-size: clamp(1.5rem, 6vw, 3rem);
       font-weight: 800;
       line-height: 1.1;
@@ -97,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
       margin: 0 0 30px;
     }
     button {
-      background: #5146b8;
-      color: white;
+      background: #81c784;
+      color: #234b27;
       border: 0;
       border-radius: 5px;
       padding: 16px 30px;
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
       font-weight: 600;
       cursor: pointer;
     }
-    button:hover { background: #403695; }
+    button:hover { background: #66bb6a; }
     button:disabled { background: #777; cursor: not-allowed; }
     @media (max-width: 600px) {
       .header { padding: 20px; flex-wrap: wrap; }
