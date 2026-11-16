@@ -45,38 +45,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
     * { box-sizing: border-box; }
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
+      /* Christmas evening sky: deep green into festive red */
+      background: linear-gradient(180deg, #0b3d2e 0%, #14532d 45%, #7f1d1d 100%);
+      background-attachment: fixed;
       color: #333;
     }
     .header {
-      background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
-      color: #234b27;
+      background: linear-gradient(135deg, #b91c1c 0%, #166534 100%);
+      color: #fff;
       padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 20px;
+      position: relative;
+      z-index: 1;
     }
     .header h1 { margin: 0; font-size: 24px; }
+    .header h1::before { content: "🎄 "; }
     .back {
-      color: #234b27;
-      border: 1px solid #234b27;
+      color: #fff;
+      border: 1px solid #fff;
       border-radius: 5px;
       padding: 10px 20px;
       text-decoration: none;
+    }
+    /* Falling snow */
+    .snow {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .snow span {
+      position: absolute;
+      top: -10vh;
+      color: #fff;
+      opacity: 0.85;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      animation: snowfall linear infinite;
+    }
+    @keyframes snowfall {
+      0%   { transform: translateY(-10vh) translateX(0); }
+      100% { transform: translateY(110vh) translateX(6vw); }
+    }
+    .snow span:nth-child(1)  { left: 4%;  font-size: 14px; animation-duration: 11s; animation-delay: 0s; }
+    .snow span:nth-child(2)  { left: 12%; font-size: 22px; animation-duration: 14s; animation-delay: 2s; }
+    .snow span:nth-child(3)  { left: 20%; font-size: 12px; animation-duration: 10s; animation-delay: 5s; }
+    .snow span:nth-child(4)  { left: 28%; font-size: 18px; animation-duration: 13s; animation-delay: 1s; }
+    .snow span:nth-child(5)  { left: 36%; font-size: 24px; animation-duration: 16s; animation-delay: 4s; }
+    .snow span:nth-child(6)  { left: 44%; font-size: 13px; animation-duration: 9s;  animation-delay: 7s; }
+    .snow span:nth-child(7)  { left: 52%; font-size: 20px; animation-duration: 12s; animation-delay: 3s; }
+    .snow span:nth-child(8)  { left: 60%; font-size: 15px; animation-duration: 15s; animation-delay: 6s; }
+    .snow span:nth-child(9)  { left: 68%; font-size: 23px; animation-duration: 11s; animation-delay: 1.5s; }
+    .snow span:nth-child(10) { left: 76%; font-size: 12px; animation-duration: 13s; animation-delay: 8s; }
+    .snow span:nth-child(11) { left: 84%; font-size: 19px; animation-duration: 10s; animation-delay: 2.5s; }
+    .snow span:nth-child(12) { left: 92%; font-size: 16px; animation-duration: 14s; animation-delay: 5.5s; }
+    @media (prefers-reduced-motion: reduce) {
+      .snow span { animation: none; display: none; }
     }
     main {
       max-width: 1000px;
       margin: 40px auto;
       padding: 0 20px;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
     .winner-card {
       background: white;
       border-radius: 10px;
+      border-top: 6px solid #b91c1c;
+      border-bottom: 6px solid #166534;
       padding: 30px 20px 40px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     }
     h2 { margin: 0 0 10px; }
     .range, .note { color: #555; }
@@ -116,6 +161,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
 </head>
 
 <body>
+  <div class="snow" aria-hidden="true">
+    <span>&#10052;</span><span>&#10053;</span><span>&#10054;</span><span>&#10052;</span>
+    <span>&#10053;</span><span>&#10054;</span><span>&#10052;</span><span>&#10053;</span>
+    <span>&#10054;</span><span>&#10052;</span><span>&#10053;</span><span>&#10054;</span>
+  </div>
   <header class="header">
     <h1>Pick a Winner</h1>
     <a class="back" href="id_list.php">Attendee ID List</a>
