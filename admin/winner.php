@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
     h2 { margin: 0 0 10px; }
     .range, .note { color: #555; }
     .number {
-      color: #558b2f;
+      color: #b8860b;
       font-size: clamp(1.5rem, 6vw, 3rem);
       font-weight: 800;
       line-height: 1.1;
