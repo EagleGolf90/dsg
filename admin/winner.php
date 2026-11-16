@@ -125,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $max_id > 0) {
       <?php if ($max_id > 0): ?>
         <h2>Winning Attendee ID</h2>
         <p class="range">Drawing from ID #1 to #<?php echo $max_id; ?></p>
-        <div class="number" aria-live="polite"><?php echo $winner === null ? '&mdash;' : $winner; ?></div>
         <div class="winner-name" aria-live="polite"><?php echo $winner_name === null ? '' : htmlspecialchars($winner_name); ?></div>
+        <div class="number" aria-live="polite"><?php echo $winner === null ? '&mdash;' : $winner; ?></div>
         <form method="post">
           <button type="submit"><?php echo $winner === null ? 'Pick a Winner' : 'Pick Again'; ?></button>
         </form>
