@@ -15,7 +15,19 @@
         <p><a href="index.html" class="back-link">← Back to Flyer</a></p>
       </header>
 
-      <div class="form-container">
+      <div
+        id="registrationClosedMessage"
+        class="form-container"
+        style="display: none; text-align: center"
+      >
+        <h2>Registration Closed</h2>
+        <p>
+          The registration is closed. Thank you for registering Deaf Seniors
+          Georgia until next time.
+        </p>
+      </div>
+
+      <div class="form-container" id="registrationContainer" style="display: none">
         <form
           id="registrationForm"
           class="registration-form"
@@ -162,6 +174,17 @@
       </div>
     </div>
 
+    <script>
+      // Show the registration form only when the URL contains ?m=on
+      (function () {
+        var registrationOpen =
+          new URLSearchParams(window.location.search).get("m") === "on";
+        document.getElementById("registrationContainer").style.display =
+          registrationOpen ? "" : "none";
+        document.getElementById("registrationClosedMessage").style.display =
+          registrationOpen ? "none" : "";
+      })();
+    </script>
     <script src="js/script.js"></script>
   </body>
 </html>
